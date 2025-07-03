@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Interactivo: Protozoarios para Ingeniería Ambiental</title>
+    <style>
+        :root {
+            --primary-color: #005A9C; /* Azul oscuro profesional */
+            --secondary-color: #00A3E0; /* Azul claro */
+            --accent-color: #FDB813; /* Amarillo/Naranja para acentos */
+            --text-color: #333;
+            --bg-color: #f4f7f6;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --warning-text-color: #5d4903;
+            --error-color: #dc3545; /* Aunque no se usa explícitamente, bueno tenerlo */
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5em 1em;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        main {
+            flex-grow: 1;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .course-step {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: none; /* Ocultar todos los pasos inicialmente */
+        }
+
+        .course-step.active {
+            display: block;
+        }
+
+        .course-step h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.6em;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .course-step h3 {
+            color: var(--secondary-color);
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .course-step p, .course-step ul {
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        .course-step ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .course-step ul li {
+            padding: 8px 0 8px 35px;
+            position: relative;
+            border-bottom: 1px dashed var(--light-gray);
+        }
+        .course-step ul li:last-child {
+            border-bottom: none;
+        }
+
+        .course-step ul li::before {
+            content: "➡️"; /* Icono por defecto */
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            color: var(--secondary-color);
+        }
+
+        .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .application, .identification-tip, .key-concept {
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid;
+            border-radius: var(--border-radius);
+            background-color: #f9f9f9;
+        }
+
+        .application {
+            border-left-color: var(--success-color);
+        }
+        .application strong::before { content: "🏭 "; }
+
+        .identification-tip {
+            border-left-color: var(--accent-color);
+        }
+        .identification-tip strong::before { content: "🔬 "; }
+
+        .warning {
+            background-color: var(--warning-color);
+            color: var(--warning-text-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #c79000;
+            border-radius: var(--border-radius);
+        }
+        .warning strong::before { content: "⚠️ "; }
+
+        .key-concept {
+            border-left-color: var(--primary-color);
+        }
+        .key-concept strong::before { content: "🔑 "; }
+
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 15px 0;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .nav-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .nav-button:disabled {
+            background-color: var(--light-gray);
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        footer.page-footer {
+            text-align: center;
+            padding: 1em;
+            background-color: var(--text-color);
+            color: var(--light-gray);
+            font-size: 0.9em;
+        }
+
+        /* Estilos específicos para iconos en listas */
+        .icon-eukarya::before { content: "🧬" !important; }
+        .icon-hetero::before { content: "🍽️" !important; }
+        .icon-motility::before { content: "🏃" !important; }
+        .icon-reproduction::before { content: "🔄" !important; }
+        .icon-life-cycle::before { content: "⏳" !important; }
+        .icon-habitat::before { content: "🏞️" !important; }
+        .icon-morphology::before { content: "🎨" !important; }
+        .icon-staining::before { content: "🧪" !important; }
+        .icon-culture::before { content: "🔬" !important; /* Reusado, o puede ser 🧑‍🔬 */}
+
+        /* Estilos para el resumen final */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .summary-item {
+            background-color: var(--light-gray);
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+        .summary-item h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+            .course-step h2 {
+                font-size: 1.4em;
+            }
+            .course-step h3 {
+                font-size: 1.2em;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            .icon {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span class="icon">🎓</span>Curso: Protozoarios y su Importancia Ambiental</h1>
+    </header>
+
+    <main id="course-content">
+        <!-- Paso 1: Introducción -->
+        <section class="course-step active" id="step1">
+            <h2><span class="icon">👋</span>Paso 1: Introducción a los Protozoarios</h2>
+            <p>¡Bienvenido/a al curso sobre protozoarios! Como futuro ingeniero/a ambiental, comprender estos microorganismos es crucial.</p>
+            <p>Los <strong>protozoarios</strong> (del griego <em>protos</em> = primero, <em>zoon</em> = animal) son organismos eucariotas, unicelulares y heterótrofos. Aunque algunos pueden formar colonias, cada célula es capaz de vivir de forma independiente.</p>
+            <ul>
+                <li class="icon-eukarya"><strong>Dominio Eukarya:</strong> Poseen un núcleo verdadero y orgánulos membranosos (mitocondrias, aparato de Golgi, etc.), a diferencia de bacterias y arqueas.</li>
+                <li class="icon-hetero"><strong>Nutrición Heterótrofa:</strong> Obtienen carbono y energía consumiendo materia orgánica. Principalmente por fagocitosis (ingestión de partículas) u osmotrofia (absorción de nutrientes disueltos).</li>
+            </ul>
+            <div class="application">
+                <strong>Aplicación Ambiental:</strong> <span class="icon">🌍</span> Los protozoarios son componentes vitales de las cadenas tróficas acuáticas y del suelo. Muchos son depredadores de bacterias, ayudando a controlar poblaciones bacterianas y participando en el ciclo de nutrientes. En plantas de tratamiento de aguas residuales, son indicadores de la calidad del proceso y contribuyen a la clarificación del efluente.
+            </div>
+        </section>
+
+        <!-- Paso 2: Características Microbiológicas Principales -->
+        <section class="course-step" id="step2">
+            <h2><span class="icon">🔬</span>Paso 2: Características Microbiológicas Clave</h2>
+            <p>Profundicemos en las características que definen a los protozoarios:</p>
+            <ul>
+                <li class="icon-motility"><strong>Motilidad:</strong> La mayoría son móviles y se clasifican según su mecanismo de locomoción:
+                    <ul>
+                        <li><strong>Flagelados (Mastigophora):</strong> Usan uno o más flagelos.</li>
+                        <li><strong>Ciliados (Ciliophora):</strong> Usan numerosos cilios cortos.</li>
+                        <li><strong>Ameboides (Sarcodina/Rhizopoda):</strong> Se mueven mediante pseudópodos (extensiones temporales del citoplasma).</li>
+                        <li><strong>Esporozoos (Apicomplexa):</strong> Generalmente inmóviles en su fase adulta, muchos son parásitos.</li>
+                    </ul>
+                </li>
+                <li class="icon-reproduction"><strong>Reproducción:</strong> Principalmente asexual por fisión binaria. Algunos pueden realizar reproducción sexual (conjugación en ciliados) o fisión múltiple (esquizogonia).</li>
+                <li class="icon-life-cycle"><strong>Ciclo de Vida:</strong> Muchos protozoarios pueden existir en dos formas:
+                    <ul>
+                        <li><strong>Trofozoíto:</strong> Forma activa, móvil, de alimentación y reproducción.</li>
+                        <li><strong>Quiste:</strong> Forma de resistencia, metabólicamente inactiva, que les permite sobrevivir en condiciones ambientales adversas (desecación, temperaturas extremas, falta de nutrientes).</li>
+                    </ul>
+                </li>
+                 <li class="icon-habitat"><strong>Hábitat:</strong> Se encuentran en una amplia variedad de ambientes acuáticos (agua dulce, salada, salobre) y terrestres (suelo húmedo). Algunos son comensales o parásitos de animales y plantas.</li>
+            </ul>
+            <div class="warning">
+                <strong>Advertencia Común:</strong> <span class="icon">⚠️</span> No confundir protozoarios con bacterias. Las bacterias son procariotas, mucho más pequeñas y estructuralmente más simples. Los protozoarios son eucariotas, más grandes y complejos.
+            </div>
+        </section>
+
+        <!-- Paso 3: Grupos Principales y su Identificación -->
+        <section class="course-step" id="step3">
+            <h2><span class="icon">🧐</span>Paso 3: Grupos Principales e Identificación Básica</h2>
+            <p>Conocer los grupos principales te ayudará a iniciar la identificación. Observa al microscopio:</p>
+
+            <h3>1. Amebas (Sarcodina/Rhizopoda)</h3>
+            <ul>
+                <li class="icon-morphology"><strong>Característica clave:</strong> Presencia de <strong>pseudópodos</strong> ("falsos pies") para movimiento y alimentación. Su forma es variable.</li>
+                <li><strong>Identificación:</strong> Busca células de forma irregular que se mueven lentamente extendiendo proyecciones citoplasmáticas. El núcleo suele ser visible. Ejemplos: <em>Amoeba proteus</em>, <em>Entamoeba histolytica</em> (parásita).</li>
+            </ul>
+            <div class="application">
+                <strong>Aplicación en Lodos Activados:</strong> <span class="icon">🏭</span> Las amebas tecadas (con una "concha" o testa) como <em>Arcella</em> o <em>Difflugia</em> son comunes en lodos activados bien operados, donde consumen bacterias y materia particulada. Su presencia indica un sistema maduro.
+            </div>
+
+            <h3>2. Flagelados (Mastigophora)</h3>
+            <ul>
+                <li class="icon-morphology"><strong>Característica clave:</strong> Uno o más <strong>flagelos</strong>, estructuras largas y filamentosas que usan para propulsarse.</li>
+                <li><strong>Identificación:</strong> Busca organismos que se mueven rápidamente, a menudo con un movimiento errático o de "latigazo". El número y disposición de los flagelos son importantes para la taxonomía. Ejemplos: <em>Euglena</em> (fotosintética, a veces clasificada como alga), <em>Giardia lamblia</em> (parásito intestinal).</li>
+            </ul>
+            <div class="identification-tip">
+                <strong>Tip de Identificación:</strong> <span class="icon">🔬</span> Para ver flagelos, a menudo se requiere microscopía de contraste de fases o tinciones especiales, ya que son muy delgados.
+            </div>
+
+            <h3>3. Ciliados (Ciliophora)</h3>
+            <ul>
+                <li class="icon-morphology"><strong>Característica clave:</strong> Numerosos <strong>cilios</strong> cortos y pilosos que cubren la célula total o parcialmente, usados para movimiento y captura de alimento. Son los protozoarios más complejos estructuralmente. Muchos tienen dos tipos de núcleos: un macronúcleo (funciones vegetativas) y uno o más micronúcleos (funciones reproductivas).</li>
+                <li><strong>Identificación:</strong> Observa su movimiento rápido y coordinado gracias a los cilios. La forma del cuerpo (ovalada, alargada, en forma de trompeta) y la disposición de los cilios son distintivas. Ejemplos: <em>Paramecium</em>, <em>Vorticella</em> (sésil, con un pedúnculo contráctil), <em>Stentor</em>.</li>
+            </ul>
+             <div class="application">
+                <strong>Bioindicadores en Tratamiento de Aguas:</strong> <span class="icon">💧</span> Los ciliados son excelentes bioindicadores. Ciliados nadadores libres (ej. <em>Paramecium</em>) pueden indicar alta carga orgánica. Ciliados fijos como <em>Vorticella</em> o reptantes como <em>Aspidisca</em> indican un lodo activado saludable y bien sedimentable.
+            </div>
+
+            <h3>4. Esporozoos (Apicomplexa)</h3>
+            <ul>
+                <li class="icon-morphology"><strong>Característica clave:</strong> Generalmente parásitos intracelulares obligados. Poseen un "complejo apical" de orgánulos que les ayuda a penetrar las células huésped. Suelen tener ciclos de vida complejos con fases sexuales y asexuales.</li>
+                <li><strong>Identificación:</strong> Difícil sin técnicas especializadas o conocimiento del huésped. Se identifican más por los síntomas que causan o por detección de sus ooquistes en muestras (ej. heces, agua). Ejemplos: <em>Plasmodium</em> (causante de la malaria), <em>Cryptosporidium</em>, <em>Toxoplasma</em>.</li>
+            </ul>
+            <div class="warning">
+                <strong>Importancia Sanitaria:</strong> <span class="icon">⚠️</span> <em>Cryptosporidium</em> y <em>Giardia</em> (un flagelado) son protozoarios patógenos transmitidos por agua contaminada, de gran preocupación en ingeniería sanitaria y ambiental. Sus quistes son resistentes a la desinfección con cloro.
+            </div>
+        </section>
+
+        <!-- Paso 4: Técnicas de Observación e Identificación -->
+        <section class="course-step" id="step4">
+            <h2><span class="icon">🔍</span>Paso 4: Técnicas de Observación e Identificación</h2>
+            <p>La identificación precisa requiere una buena observación microscópica y, a veces, técnicas adicionales.</p>
+            <ul>
+                <li class="icon-culture"><strong>Examen en Fresco:</strong>
+                    <ul>
+                        <li>Colocar una gota de muestra (agua, cultivo, sedimento) en un portaobjetos, cubrir con un cubreobjetos.</li>
+                        <li>Observar con objetivos de 10x, 40x. El objetivo de 100x (inmersión) puede ser necesario para detalles finos, pero puede aplastar a los protozoos más grandes o delicados.</li>
+                        <li>Observar tamaño, forma, tipo de movimiento, presencia de vacuolas, núcleo, estructuras de locomoción.</li>
+                    </ul>
+                </li>
+                <li class="icon-staining"><strong>Tinción (cuando sea necesario):</strong>
+                    <ul>
+                        <li><strong>Tinciones vitales:</strong> Permiten observar estructuras en organismos vivos (ej. Rojo Neutro para vacuolas digestivas).</li>
+                        <li><strong>Tinciones permanentes:</strong> Fijan y tiñen los organismos muertos para una observación detallada de estructuras internas (ej. Hematoxilina férrica, Giemsa). Son más comunes en diagnóstico parasitológico.</li>
+                        <li>Para ingeniería ambiental, el examen en fresco suele ser suficiente para una evaluación general.</li>
+                    </ul>
+                </li>
+                <li class="icon-morphology"><strong>Claves Dicotómicas y Guías:</strong>
+                    <ul>
+                        <li>Utilizar guías ilustradas y claves de identificación específicas para protozoarios de agua dulce o del ambiente de interés (ej. lodos activados).</li>
+                        <li>Estas claves se basan en características morfológicas observables.</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="identification-tip">
+                <strong>Consejo Práctico:</strong> <span class="icon">🔬</span> Al observar en fresco, reduce la intensidad de la luz del microscopio y cierra parcialmente el diafragma para aumentar el contraste. Esto es crucial para ver protozoarios no pigmentados y sus estructuras delicadas. La microscopía de contraste de fases es ideal si está disponible.
+            </div>
+            <div class="warning">
+                <strong>Errores Comunes en Identificación:</strong>
+                <ul>
+                    <li>Confundir detritos o burbujas de aire con microorganismos.</li>
+                    <li>Identificación basada en una única característica; considera el conjunto de rasgos.</li>
+                    <li>Dificultad para ver flagelos o cilios sin el contraste adecuado.</li>
+                    <li>Variabilidad intraespecífica: los individuos de una misma especie pueden variar ligeramente en tamaño y forma.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 5: Aplicaciones Ambientales e Industriales Detalladas -->
+        <section class="course-step" id="step5">
+            <h2><span class="icon">💡</span>Paso 5: Aplicaciones Ambientales e Industriales</h2>
+            <p>Los protozoarios no son solo curiosidades microscópicas; son actores clave en muchos procesos ambientales e industriales.</p>
+
+            <div class="application">
+                <strong>Tratamiento de Aguas Residuales (PTAR):</strong>
+                <ul>
+                    <li><strong>Lodos Activados:</strong> Los protozoarios (especialmente ciliados y amebas tecadas) son fundamentales. Consumen bacterias dispersas, ayudando a clarificar el efluente y a formar flóculos más grandes y sedimentables. La comunidad de protozoarios es un indicador sensible del estado del proceso (ej. baja carga, alta carga, toxicidad, bulking filamentoso).</li>
+                    <li><strong>Filtros Percoladores y Biodiscos:</strong> También desarrollan biopelículas donde los protozoarios participan en la depuración.</li>
+                </ul>
+            </div>
+
+            <div class="application">
+                <strong>Bioindicadores de Calidad del Agua:</strong>
+                <ul>
+                    <li>La presencia, ausencia o predominancia de ciertos grupos de protozoarios puede indicar el grado de contaminación de un cuerpo de agua. Por ejemplo, una alta densidad de ciliados bacterívoros puede señalar contaminación orgánica.</li>
+                    <li>Algunas especies son sensibles a contaminantes específicos.</li>
+                </ul>
+            </div>
+
+            <div class="application">
+                <strong>Biorremediación y Salud del Suelo:</strong>
+                <ul>
+                    <li>En el suelo, los protozoarios regulan las poblaciones bacterianas y fúngicas, influyendo en la descomposición de la materia orgánica y el ciclo de nutrientes (especialmente nitrógeno, liberando amonio).</li>
+                    <li>Pueden contribuir a la degradación de contaminantes en suelos y acuíferos contaminados.</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <strong>Protozoarios Patógenos:</strong> <span class="icon">☣️</span>
+                <p>Como ingenieros ambientales, es vital conocer los protozoarios patógenos que pueden transmitirse por el agua y el ambiente:</p>
+                <ul>
+                    <li><em>Giardia lamblia:</em> Causa giardiasis. Sus quistes son resistentes.</li>
+                    <li><em>Cryptosporidium parvum:</em> Causa criptosporidiosis. Sus ooquistes son muy resistentes al cloro.</li>
+                    <li><em>Entamoeba histolytica:</em> Causa amebiasis.</li>
+                    <li><em>Naegleria fowleri:</em> "Ameba comecerebros", rara pero fatal, presente en aguas dulces cálidas.</li>
+                </ul>
+                <p>El diseño de sistemas de tratamiento de agua potable y residual debe considerar la eliminación o inactivación de estos patógenos.</p>
+            </div>
+        </section>
+
+        <!-- Paso 6: Resumen Final -->
+        <section class="course-step" id="step6">
+            <h2><span class="icon">📝</span>Paso 6: Resumen y Conceptos Clave</h2>
+            <p>¡Has completado el curso básico sobre protozoarios! Aquí tienes un resumen de los puntos más importantes:</p>
+            
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <h4>Definición</h4>
+                    <p>Eucariotas unicelulares, heterótrofos, móviles en su mayoría, con formas de trofozoíto (activa) y quiste (resistencia).</p>
+                </div>
+                <div class="summary-item">
+                    <h4>Grupos Principales</h4>
+                    <p>Amebas (pseudópodos), Flagelados (flagelos), Ciliados (cilios), Esporozoos (parásitos, complejo apical).</p>
+                </div>
+                <div class="summary-item">
+                    <h4>Identificación</h4>
+                    <p>Basada en morfología (forma, tamaño), estructuras de locomoción, núcleo. Microscopía (fresco, contraste de fases) es clave.</p>
+                </div>
+                <div class="summary-item">
+                    <h4>Importancia en PTAR</h4>
+                    <p>Clarifican efluentes, forman flóculos, son bioindicadores de la salud del proceso de lodos activados.</p>
+                </div>
+                <div class="summary-item">
+                    <h4>Bioindicadores</h4>
+                    <p>La comunidad de protozoarios refleja la calidad del agua y las condiciones del ecosistema.</p>
+                </div>
+                <div class="summary-item">
+                    <h4>Salud del Suelo</h4>
+                    <p>Regulan poblaciones bacterianas, participan en el ciclo de nutrientes.</p>
+                </div>
+                <div class="summary-item">
+                    <h4>Patógenos Acuáticos</h4>
+                    <p><em>Giardia, Cryptosporidium</em> son preocupaciones importantes en la potabilización y tratamiento de aguas.</p>
+                </div>
+                 <div class="summary-item">
+                    <h4>Diferencia Clave</h4>
+                    <p>Protozoarios (eucariotas, complejos) vs. Bacterias (procariotas, simples).</p>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px;">Continúa explorando este fascinante mundo microscópico. La observación práctica y la consulta de bibliografía especializada te ayudarán a convertirte en un experto.</p>
+            <p><strong>¡Mucho éxito en tus estudios y futura carrera como Ingeniero/a Ambiental!</strong> <span class="icon">🎉</span></p>
+        </section>
+
+        <div class="navigation-buttons">
+            <button id="prevBtn" class="nav-button" onclick="prevStep()" disabled>Anterior</button>
+            <button id="nextBtn" class="nav-button" onclick="nextStep()">Siguiente</button>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <p>© 2024 Curso Interactivo de Microbiología Ambiental. Creado para fines educativos.</p>
+    </footer>
+
+    <script>
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.course-step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const totalSteps = steps.length;
+
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                if (index === stepIndex) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            updateButtonStates();
+            window.scrollTo(0, 0); // Scroll al inicio de la página al cambiar de paso
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function updateButtonStates() {
+            if (currentStep === 0) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            if (currentStep === totalSteps - 1) {
+                nextBtn.textContent = 'Finalizar Curso'; // O simplemente deshabilitar
+                 // nextBtn.disabled = true; // Opcional: deshabilitar al final
+            } else {
+                nextBtn.textContent = 'Siguiente';
+                nextBtn.disabled = false;
+            }
+        }
+
+        // Initialize
+        showStep(currentStep);
+    </script>
+
+</body>
+</html>
